@@ -7,5 +7,5 @@ coverage/
 *.log
 .DS_Store
 
-# đề bài gốc từ khách, không public
+# original assessment brief from the client, not for public distribution
 *.pdf
