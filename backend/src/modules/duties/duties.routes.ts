@@ -5,3 +5,5 @@ export const dutiesRouter = Router();
 
 dutiesRouter.get("/", dutiesController.listDuties);
 dutiesRouter.post("/", dutiesController.createDuty);
+dutiesRouter.put("/:id", dutiesController.updateDuty);
+dutiesRouter.delete("/:id", dutiesController.removeDuty);

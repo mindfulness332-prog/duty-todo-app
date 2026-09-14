@@ -16,3 +16,14 @@ export const createDuty = catchAsync(async (req: Request, res: Response) => {
   const duty = await dutiesService.createDuty(body.name);
   res.status(201).json({ data: duty });
 });
+
+export const updateDuty = catchAsync(async (req: Request, res: Response) => {
+  const body = req.body as DutyRequestBody;
+  const duty = await dutiesService.updateDuty(req.params["id"] ?? "", body.name);
+  res.status(200).json({ data: duty });
+});
+
+export const removeDuty = catchAsync(async (req: Request, res: Response) => {
+  await dutiesService.removeDuty(req.params["id"] ?? "");
+  res.status(204).send();
+});
