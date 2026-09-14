@@ -38,10 +38,10 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   assertRequiredVars(source);
 
   return {
-    port: parsePort(source.PORT),
-    databaseUrl: source.DATABASE_URL as string,
-    allowedOrigin: source.ALLOWED_ORIGIN ?? "http://localhost:5173",
-    logLevel: parseLogLevel(source.LOG_LEVEL),
+    port: parsePort(source["PORT"]),
+    databaseUrl: source["DATABASE_URL"] as string,
+    allowedOrigin: source["ALLOWED_ORIGIN"] ?? "http://localhost:5173",
+    logLevel: parseLogLevel(source["LOG_LEVEL"]),
   };
 }
 
