@@ -1,6 +1,7 @@
 import { createApp } from "./app";
 import { env } from "./config/env";
 import { logger } from "./utils/logger";
+import { pool } from "./db/pool";
 
 const app = createApp();
 
@@ -15,7 +16,14 @@ function shutdown(signal: string): void {
       logger.error("Error while closing server", { error: err.message });
       process.exit(1);
     }
-    process.exit(0);
+    pool
+      .end()
+      .then(() => process.exit(0))
+      .catch((poolErr: unknown) => {
+        const message = poolErr instanceof Error ? poolErr.message : "Unknown error";
+        logger.error("Error while closing database pool", { error: message });
+        process.exit(1);
+      });
   });
 }
 
