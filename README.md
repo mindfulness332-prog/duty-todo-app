@@ -32,7 +32,7 @@ Backend and frontend are two fully independent projects (separate `package.json`
    ```bash
    cd backend
    npm install
-   cp .env.example .env
+   cp .env.example .env   # Windows without Git Bash/WSL: copy .env.example .env
    npm run dev
    ```
 
@@ -43,7 +43,7 @@ Backend and frontend are two fully independent projects (separate `package.json`
    ```bash
    cd frontend
    npm install
-   cp .env.example .env
+   cp .env.example .env   # Windows without Git Bash/WSL: copy .env.example .env
    npm run dev
    ```
 

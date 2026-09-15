@@ -18,6 +18,8 @@ npm install
 cp .env.example .env
 ```
 
+(On Windows without Git Bash/WSL, use `copy .env.example .env` instead of `cp`.)
+
 Edit `.env` if your database connection string differs from the default (it matches the root `docker-compose.yml` out of the box).
 
 ## Running
