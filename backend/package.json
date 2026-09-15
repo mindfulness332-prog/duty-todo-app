@@ -5,11 +5,11 @@
   "description": "Duty to-do list API server (Express + TypeScript + PostgreSQL)",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "start": "node dist/index.js",
+    "start": "node --env-file=.env dist/index.js",
     "test": "jest -c jest.config.ts",
     "test:integration": "jest -c jest.integration.config.ts --runInBand",
     "typecheck": "tsc --noEmit"
@@ -33,6 +33,6 @@
     "typescript": "^5.7.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.6.0"
   }
 }

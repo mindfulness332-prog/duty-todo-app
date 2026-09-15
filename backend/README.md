@@ -4,7 +4,7 @@ REST API for the Duty to-do list, built with Node.js, Express, and TypeScript in
 
 ## Prerequisites
 
-- Node.js 18 or later
+- Node.js 20.6 or later (uses the built-in `--env-file` flag to load `.env`, no `dotenv` dependency needed)
 - npm
 - A PostgreSQL 16 database, reachable via a connection string. Two ways to get one locally:
   - **Docker** (recommended, works the same on Windows/macOS/Linux): see the root [README](../README.md) or just run `docker compose up -d db` from the repository root.
