@@ -5,6 +5,7 @@ import { validateId, validateName } from "./duties.validation";
 
 interface PgErrorLike {
   code?: string;
+  message?: string;
 }
 
 const CONNECTION_ERROR_CODES = new Set([
@@ -16,12 +17,24 @@ const CONNECTION_ERROR_CODES = new Set([
   "57P03", // cannot_connect_now
 ]);
 
+// node-postgres's own client-side timeouts (connectionTimeoutMillis,
+// query_timeout in db/pool.ts) throw a plain Error with no .code at all —
+// verified directly against a real pool, not assumed from docs — so they
+// have to be matched by message instead.
+const CONNECTION_ERROR_MESSAGE_PATTERNS = [/connection terminated/i, /query read timeout/i];
+
 function isConnectionError(err: unknown): boolean {
   if (typeof err !== "object" || err === null) {
     return false;
   }
-  const code = (err as PgErrorLike).code;
-  return typeof code === "string" && CONNECTION_ERROR_CODES.has(code);
+  const { code, message } = err as PgErrorLike;
+  if (typeof code === "string" && CONNECTION_ERROR_CODES.has(code)) {
+    return true;
+  }
+  return (
+    typeof message === "string" &&
+    CONNECTION_ERROR_MESSAGE_PATTERNS.some((pattern) => pattern.test(message))
+  );
 }
 
 async function withConnectionErrorHandling<T>(operation: () => Promise<T>): Promise<T> {

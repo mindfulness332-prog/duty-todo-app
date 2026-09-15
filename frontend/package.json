@@ -9,6 +9,7 @@
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {

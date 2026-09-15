@@ -11,6 +11,7 @@
     "prebuild": "npm run clean",
     "start": "node --env-file=.env dist/index.js",
     "test": "jest -c jest.config.ts",
+    "test:coverage": "jest -c jest.config.ts --coverage",
     "test:integration": "jest -c jest.integration.config.ts --runInBand",
     "typecheck": "tsc --noEmit"
   },

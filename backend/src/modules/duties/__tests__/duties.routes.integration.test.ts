@@ -1,8 +1,19 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import request from "supertest";
 import { createApp } from "../../../app";
 import { pool } from "../../../db/pool";
 
 const app = createApp();
+
+beforeAll(async () => {
+  // The schema normally comes from docker-compose's initdb hook, which only
+  // runs once against a brand-new volume. Running it here too (it's all
+  // CREATE ... IF NOT EXISTS, so safe to repeat) means these tests also work
+  // against a stale volume or a manually-created database that never got it.
+  const schemaPath = path.join(__dirname, "../../../../db/init/001_init.sql");
+  await pool.query(readFileSync(schemaPath, "utf8"));
+});
 
 beforeEach(async () => {
   await pool.query("TRUNCATE duties RESTART IDENTITY");

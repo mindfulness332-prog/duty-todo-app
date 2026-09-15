@@ -41,6 +41,17 @@ describe("duties.service", () => {
       await expect(service.listDuties()).rejects.toThrow(ServiceUnavailableError);
     });
 
+    it("wraps pg's own client-side timeout errors as ServiceUnavailableError", async () => {
+      // pg's connectionTimeoutMillis/query_timeout (db/pool.ts) throw a plain
+      // Error with no .code — confirmed against a real pool, not assumed —
+      // so these have to be caught by message instead of error code.
+      mockedRepository.findAll.mockRejectedValue(
+        new Error("Connection terminated due to connection timeout"),
+      );
+
+      await expect(service.listDuties()).rejects.toThrow(ServiceUnavailableError);
+    });
+
     it("lets an unrelated error propagate unchanged", async () => {
       mockedRepository.findAll.mockRejectedValue(new Error("something else"));
 

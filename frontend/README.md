@@ -34,6 +34,7 @@ Vite prints the local URL to open (`http://localhost:5173` by default).
 
 ```bash
 npm test
+npm run test:coverage   # same tests, with a coverage report
 ```
 
 Runs Jest with React Testing Library — component and hook tests only, no browser or backend required (network calls are mocked).

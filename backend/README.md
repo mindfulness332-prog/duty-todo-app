@@ -37,7 +37,10 @@ The server listens on the port from `PORT` in `.env` (default `3000`).
 ```bash
 npm test               # unit tests — no database required
 npm run test:integration   # integration tests — requires a running database (see Prerequisites)
+npm run test:coverage      # unit tests with a coverage report
 ```
+
+The unit-only coverage number understates the real picture: routing/middleware wiring (`app.ts`, `cors.ts`, the duties routes/controller) is exercised by the integration suite instead of mocked in isolation, so it shows as uncovered here even though it's tested.
 
 ## API
 

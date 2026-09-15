@@ -14,24 +14,20 @@ describe("DutyItem", () => {
     expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
   });
 
-  it(
-    "switches to edit mode and calls onUpdate with the new name",
-    async () => {
-      const onUpdate = jest.fn().mockResolvedValue(undefined);
-      render(<DutyItem duty={duty} onUpdate={onUpdate} onDelete={jest.fn()} />);
+  it("switches to edit mode and calls onUpdate with the new name", async () => {
+    const onUpdate = jest.fn().mockResolvedValue(undefined);
+    render(<DutyItem duty={duty} onUpdate={onUpdate} onDelete={jest.fn()} />);
 
-      await userEvent.click(screen.getByRole("button", { name: "Edit" }));
+    await userEvent.click(screen.getByRole("button", { name: "Edit" }));
 
-      const input = screen.getByRole("textbox");
-      expect(input).toHaveValue("Buy groceries");
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveValue("Buy groceries");
 
-      fireEvent.change(input, { target: { value: "Buy groceries and milk" } });
-      await userEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.change(input, { target: { value: "Buy groceries and milk" } });
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
-      await waitFor(() => expect(onUpdate).toHaveBeenCalledWith("1", "Buy groceries and milk"));
-    },
-    15000,
-  );
+    await waitFor(() => expect(onUpdate).toHaveBeenCalledWith("1", "Buy groceries and milk"));
+  });
 
   it("returns to view mode without saving when Cancel is clicked", async () => {
     render(<DutyItem duty={duty} onUpdate={jest.fn()} onDelete={jest.fn()} />);
@@ -45,21 +41,17 @@ describe("DutyItem", () => {
     expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
   });
 
-  it(
-    "asks for confirmation before deleting, then calls onDelete",
-    async () => {
-      const onDelete = jest.fn().mockResolvedValue(undefined);
-      render(<DutyItem duty={duty} onUpdate={jest.fn()} onDelete={onDelete} />);
+  it("asks for confirmation before deleting, then calls onDelete", async () => {
+    const onDelete = jest.fn().mockResolvedValue(undefined);
+    render(<DutyItem duty={duty} onUpdate={jest.fn()} onDelete={onDelete} />);
 
-      await userEvent.click(screen.getByRole("button", { name: "Delete" }));
+    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
 
-      expect(onDelete).not.toHaveBeenCalled();
-      expect(screen.getByText("Delete this duty?")).toBeInTheDocument();
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(screen.getByText("Delete this duty?")).toBeInTheDocument();
 
-      await userEvent.click(screen.getByRole("button", { name: "Yes, delete" }));
+    await userEvent.click(screen.getByRole("button", { name: "Yes, delete" }));
 
-      await waitFor(() => expect(onDelete).toHaveBeenCalledWith("1"));
-    },
-    15000,
-  );
+    await waitFor(() => expect(onDelete).toHaveBeenCalledWith("1"));
+  });
 });

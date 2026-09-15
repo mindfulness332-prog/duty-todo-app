@@ -14,6 +14,27 @@ interface ApiSuccessResponseBody<T> {
   data: T;
 }
 
+// Only trusts the body enough to read `error.code`/`error.message` if both
+// are actually present as strings — an upstream proxy or an unrelated 502
+// won't have our `{ error: {...} }` shape at all, and reaching into `.error`
+// without checking it exists first throws a TypeError that would otherwise
+// mask the real HTTP status behind a confusing "Something went wrong".
+function extractApiError(body: unknown): ApiErrorResponseBody["error"] | undefined {
+  if (typeof body !== "object" || body === null || !("error" in body)) {
+    return undefined;
+  }
+  const { error } = body as { error: unknown };
+  if (
+    typeof error !== "object" ||
+    error === null ||
+    typeof (error as { code?: unknown }).code !== "string" ||
+    typeof (error as { message?: unknown }).message !== "string"
+  ) {
+    return undefined;
+  }
+  return error as ApiErrorResponseBody["error"];
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
@@ -26,17 +47,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   if (!response.ok) {
-    let body: ApiErrorResponseBody | undefined;
+    let rawBody: unknown;
     try {
-      body = (await response.json()) as ApiErrorResponseBody;
+      rawBody = await response.json();
     } catch {
-      body = undefined;
+      rawBody = undefined;
     }
+    const apiError = extractApiError(rawBody);
     throw new ApiError(
       response.status,
-      body?.error.code ?? "UNKNOWN_ERROR",
-      body?.error.message ?? "Something went wrong. Please try again.",
-      body?.error.details,
+      apiError?.code ?? "UNKNOWN_ERROR",
+      apiError?.message ?? "Something went wrong. Please try again.",
+      apiError?.details,
     );
   }
 

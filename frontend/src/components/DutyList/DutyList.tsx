@@ -14,10 +14,9 @@ export function DutyList({ duties, loading, onUpdate, onDelete }: DutyListProps)
     <List
       loading={loading}
       dataSource={duties}
+      rowKey="id"
       locale={{ emptyText: <Empty description="No duties yet. Add one to get started." /> }}
-      renderItem={(duty) => (
-        <DutyItem key={duty.id} duty={duty} onUpdate={onUpdate} onDelete={onDelete} />
-      )}
+      renderItem={(duty) => <DutyItem duty={duty} onUpdate={onUpdate} onDelete={onDelete} />}
     />
   );
 }
