@@ -1,5 +1,7 @@
+import { DutiesPage } from "./pages/DutiesPage";
+
 function App() {
-  return <div>Duty To-Do List</div>;
+  return <DutiesPage />;
 }
 
 export default App;
