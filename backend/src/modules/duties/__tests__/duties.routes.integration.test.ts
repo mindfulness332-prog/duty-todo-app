@@ -113,6 +113,13 @@ describe("DELETE /api/duties/:id", () => {
 
     expect(res.status).toBe(404);
   });
+
+  it("rejects a malformed id with 400", async () => {
+    const res = await request(app).delete("/api/duties/not-a-uuid");
+
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_ERROR");
+  });
 });
 
 describe("health checks", () => {

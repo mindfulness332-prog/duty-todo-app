@@ -61,6 +61,14 @@ describe("duties.service", () => {
 
       expect(mockedRepository.create).toHaveBeenCalledWith({ name: "Buy groceries" });
     });
+
+    it("wraps a database connection error as ServiceUnavailableError", async () => {
+      mockedRepository.create.mockRejectedValue(
+        Object.assign(new Error("boom"), { code: "ECONNREFUSED" }),
+      );
+
+      await expect(service.createDuty("Buy groceries")).rejects.toThrow(ServiceUnavailableError);
+    });
   });
 
   describe("updateDuty", () => {
